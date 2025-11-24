@@ -97,7 +97,6 @@ const App = () => {
     try {
         const response = await fetch(GAS_WEB_APP_URL, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(registrationData),
         });
 
@@ -184,7 +183,6 @@ const App = () => {
         try {
             await fetch(GAS_WEB_APP_URL, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(surveyData),
             });
             setDataSaveStatus('บันทึกผลสำรวจสำเร็จ (Google Sheet)');
