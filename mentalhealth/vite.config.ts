@@ -2,7 +2,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc'; // ใช้ SWC plugin ที่มีประสิทธิภาพ
 
 // URL จริงของคุณที่ใช้ในการ Deploy Google Apps Script
-const GAS_REAL_URL = "https://script.google.com/macros/s/AKfycbxQRHw-G5EOr5NAd19e--P4UUPR72fqGgEdvM_AFGPNE21nqkzTS9OxCCcaWW1CRxOA/exec";
+const GAS_REAL_URL = "https://script.google.com/macros/s/AKfycbwKQMg7MNZlWLOWFFHQnrHNqIjymTvsKgIqLPSWujmsf7A9rr4vs-Q2CsvfQvgbXlVtyQ/exec";
 
 // Path ที่ใช้เรียกจาก Frontend 
 const GAS_PROXY_PATH = '/gas_proxy';

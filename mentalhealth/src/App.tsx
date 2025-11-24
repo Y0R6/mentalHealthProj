@@ -18,7 +18,7 @@ interface SurveyResult {
 const appId = 'local-mental-health-app-id'; 
 
 // --- API Configuration (ใช้ KKU IntelSphere API และ GAS Proxy) ---
-const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxQRHw-G5EOr5NAd19e--P4UUPR72fqGgEdvM_AFGPNE21nqkzTS9OxCCcaWW1CRxOA/exec"; // ใช้ Proxy Path ที่ตั้งใน vite.config.ts
+const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwKQMg7MNZlWLOWFFHQnrHNqIjymTvsKgIqLPSWujmsf7A9rr4vs-Q2CsvfQvgbXlVtyQ/exec"; // ใช้ Proxy Path ที่ตั้งใน vite.config.ts
 
 const KKU_API_BASE_URL: string = "https://gen.ai.kku.ac.th/api/v1";
 const KKU_API_ENDPOINT: string = `${KKU_API_BASE_URL}/chat/completions`;
