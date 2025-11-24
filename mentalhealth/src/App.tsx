@@ -177,7 +177,7 @@ const App = () => {
     };
     
     // --- Google Apps Script / Google Sheet Saving (ใช้ Proxy) ---
-    if (!GAS_WEB_APP_URL.startsWith("https://script.google.com/macros/s/AKfycby3HmK-fsG6cGDd13wllezM9Hp6aRwR040gIlx45EyQ0YpxxofDxgGs6w2XzmOo9Nw9/exec")) {
+    if (!GAS_WEB_APP_URL.startsWith("https://script.google.com/macros/s/AKfycbxe287xK-Kz8IFz8oBRZ_B18iXAFkBNPFAY81G-gS2ehGqsp_ioa3GIoJhS8ifhCeXuKA/exec")) {
         setDataSaveStatus('บันทึกข้อมูลล้มเหลว: GAS Web App URL ไม่ถูกต้อง');
     } else {
         try {
