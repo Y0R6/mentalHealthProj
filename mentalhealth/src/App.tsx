@@ -18,7 +18,7 @@ interface SurveyResult {
 const appId = 'local-mental-health-app-id'; 
 
 // --- API Configuration (ใช้ KKU IntelSphere API และ GAS Proxy) ---
-const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzmuU_mldbT44f6w1Emt_yP23O2HJq46yHriedBDCdM3UWI2ppw1elGQWOwkSfinJHwmQ/exec"; // ใช้ Proxy Path ที่ตั้งใน vite.config.ts
+const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyKOtQuw70YY0eMq4yfk95smUiNf0WsDnYtoX9LE_-2BCvqhkeowmyAT0bEp2CAOWUE0w/exec"; // ใช้ Proxy Path ที่ตั้งใน vite.config.ts
 
 const KKU_API_BASE_URL: string = "https://gen.ai.kku.ac.th/api/v1";
 const KKU_API_ENDPOINT: string = `${KKU_API_BASE_URL}/chat/completions`;
@@ -94,11 +94,18 @@ const App = () => {
         action: 'CHECK_USER_OR_REGISTER', // Action ใหม่สำหรับ GAS
     };
 
+     // *** เพิ่ม Log เพื่อดูข้อมูลที่ส่ง ***
+    console.log("📤 Sending registration data:", registrationData);
+    console.log("📍 To URL:", GAS_WEB_APP_URL);
+    
     try {
         const response = await fetch(GAS_WEB_APP_URL, {
             method: 'POST',
             body: JSON.stringify(registrationData),
         });
+
+        console.log("📥 Response status:", response.status);
+        console.log("📥 Response ok:", response.ok);
 
         if (!response.ok) throw new Error(`GAS request failed with status ${response.status}`);
 
@@ -109,6 +116,8 @@ const App = () => {
         
         // ในการใช้งานจริง, Response จาก GAS ควรเป็น JSON ที่บอกสถานะ
         const result = await response.json(); 
+
+        console.log("✅ Result from GAS:", result);
         
         const currentUserName = userName.trim();
 
