@@ -18,7 +18,7 @@ interface SurveyResult {
 const appId = 'local-mental-health-app-id'; 
 
 // --- API Configuration (ใช้ KKU IntelSphere API และ GAS Proxy) ---
-const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyvdcxrDtPsxxUP-DNQLbw6w32zzV-HInOYmmScnSle5UpFtM_tDCOyHrLjplG5OFSt/exec"; // ใช้ Proxy Path ที่ตั้งใน vite.config.ts
+const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz-yy-DL1XAR_ejafknTauP_r0BlJT1MFvOQD80ESzubu6qaVQXw3yOMqFw1l9_qHbXcg/exec"; // ใช้ Proxy Path ที่ตั้งใน vite.config.ts
 
 const KKU_API_BASE_URL: string = "https://gen.ai.kku.ac.th/api/v1";
 const KKU_API_ENDPOINT: string = `${KKU_API_BASE_URL}/chat/completions`;
@@ -148,13 +148,11 @@ const App = () => {
   };
 
   // 5. Process Survey and Save Data
-  const submitSurvey = async (e: React.FormEvent) => {
+const submitSurvey = async (e: React.FormEvent) => {
     e.preventDefault();
       
-    // คำนวณคะแนนรวม
     const totalScore = Object.values(surveyResponses).reduce((sum, current) => sum + current, 0);
 
-    // กำหนดระดับความเสี่ยง
     let level: string;
     if (totalScore >= 5 && totalScore <= 10) {
       level = 'Low';
@@ -171,9 +169,8 @@ const App = () => {
     };
 
     setLatestResult(newResult);
-    setHasTakenSurvey(true); // ตั้งค่าว่าเคยทำแล้ว
+    setHasTakenSurvey(true);
 
-    // สร้าง Object ข้อมูลที่พร้อมส่ง
     const surveyData = {
         userId: userId || 'anonymous-gas',
         timestamp: newResult.timestamp,
@@ -181,27 +178,42 @@ const App = () => {
         survey: surveyResponses,
         totalScore: totalScore,
         riskLevel: level,
-        userName: userName, // ส่งชื่อผู้ใช้ไปด้วย
+        userName: userName,
         action: 'SUBMIT_SURVEY',
     };
     
-    // --- Google Apps Script / Google Sheet Saving (ใช้ Proxy) ---
-    if (!GAS_WEB_APP_URL.startsWith("https://script.google.com/macros/s/AKfycbxe287xK-Kz8IFz8oBRZ_B18iXAFkBNPFAY81G-gS2ehGqsp_ioa3GIoJhS8ifhCeXuKA/exec")) {
-        setDataSaveStatus('บันทึกข้อมูลล้มเหลว: GAS Web App URL ไม่ถูกต้อง');
-    } else {
-        try {
-            await fetch(GAS_WEB_APP_URL, {
-                method: 'POST',
-                body: JSON.stringify(surveyData),
-            });
-            setDataSaveStatus('บันทึกผลสำรวจสำเร็จ (Google Sheet)');
-        } catch (error) {
-            console.error("Error sending data to Google Apps Script:", error);
-            setDataSaveStatus('บันทึกข้อมูลล้มเหลว (การเชื่อมต่อล้มเหลว)');
-        }
-    }
+    // *** เพิ่ม Log ***
+    console.log("📤 Sending survey data:", surveyData);
+    console.log("📍 Survey responses:", surveyResponses);
     
-    // ไปยังหน้าผลลัพธ์
+        try {
+        console.log("📡 Sending to:", GAS_WEB_APP_URL);
+        
+        const response = await fetch(GAS_WEB_APP_URL, {
+            method: 'POST',
+            body: JSON.stringify(surveyData),
+        });
+        
+        console.log("📥 Response status:", response.status);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+        
+        const result = await response.json();
+        console.log("✅ Result from GAS:", result);
+        
+        if (result.status === "success") {
+            setDataSaveStatus('บันทึกผลสำรวจสำเร็จ (Google Sheet)');
+        } else {
+            setDataSaveStatus('บันทึกล้มเหลว: ' + result.message);
+        }
+    } catch (error) {
+        console.error("❌ Error sending survey data:", error);
+        setDataSaveStatus('บันทึกข้อมูลล้มเหลว (การเชื่อมต่อล้มเหลว)');
+    }
+    // } // ลบบรรทัดนี้ออกด้วย
+    
     setStage('result');
   };
 
